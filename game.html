@@ -244,7 +244,7 @@ button.red { background: var(--red); box-shadow: 0 4px #732222; }
       </select>
     </div>
     
-    <button id="startBtn" type="button" class="green" style="width:100%; margin-top:10px;">🎮 MULAI GAME</button>
+    <button id="startBtn" type="button" class="green" style="width:100%; margin-top:10px;" onclick="startGame()">🎮 MULAI GAME</button>
     <p id="loginMsg" class="error"></p>
   </section>
 
@@ -280,8 +280,8 @@ button.red { background: var(--red); box-shadow: 0 4px #732222; }
       <input type="text" id="answerInput" placeholder="Ketik jawaban ing kene..." autocomplete="off">
       <div id="modalMsg" class="modal-msg"></div>
       <div>
-        <button id="submitAnswerBtn" type="button" class="green">Kirim Jawaban</button>
-        <button id="cancelModalBtn" type="button" class="red">Batal</button>
+        <button id="submitAnswerBtn" type="button" class="green" onclick="submitAnswer()">Kirim Jawaban</button>
+        <button id="cancelModalBtn" type="button" class="red" onclick="closeModal()">Batal</button>
       </div>
     </div>
   </div>
@@ -293,13 +293,13 @@ button.red { background: var(--red); box-shadow: 0 4px #732222; }
     <div id="finalScore" class="score-badge">0</div>
     <p>Poin Pungkasan</p>
     <p id="sendStatus"></p>
-    <button id="sendAgain" type="button" class="green">📤 Kirim Hasil Maneh</button>
+    <button id="sendAgain" type="button" class="green" onclick="sendResult()">📤 Kirim Hasil Maneh</button>
   </section>
 </div>
 
 <script>
 // Isikan URL Web App Google Apps Script dari Drive Anda di sini
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxkdifQXOQPux5UPOOH9sEiakkIwbeN08I5wFL48j8MmahxdSL25P6CWUrGhgpI4sFm/exec";
+const WEB_APP_URL = "GANTI_DENGAN_URL_SCRIPT_ANDA";
 
 // Grid Aksara Jawa 10x10
 const GRID_DATA = [
@@ -349,46 +349,37 @@ let dragging = false, startCell = null, pendingWord = null;
 
 const $ = id => document.getElementById(id); const $$ = s => document.querySelectorAll(s);
 
-// Inisialisasi Saat Halaman Siap
-document.addEventListener("DOMContentLoaded", () => {
-  $("startBtn").onclick = startGame;
-  $("submitAnswerBtn").onclick = submitAnswer;
-  $("cancelModalBtn").onclick = () => { $("answerModal").classList.add("hidden"); pendingWord = null; };
-  $("sendAgain").onclick = sendResult;
-  $("answerInput").onkeydown = e => { if (e.key === "Enter") submitAnswer(); };
-  
-  // Memungkinkan tekan Enter di input awal untuk Mulai Game
-  ["student", "absentNo", "className"].forEach(id => {
-    $(id).addEventListener("keydown", e => { if (e.key === "Enter") startGame(); });
-  });
-});
-
+// Fungsi Mulai Game
 function startGame() {
-  const student = $("student").value.trim();
-  const absentNo = $("absentNo").value.trim();
-  const className = $("className").value;
-  const loginMsg = $("loginMsg");
+  try {
+    const student = $("student").value.trim();
+    const absentNo = $("absentNo").value.trim();
+    const className = $("className").value;
+    const loginMsg = $("loginMsg");
 
-  let valid = true;
-  if (!student) { $("student").style.borderColor = "var(--red)"; valid = false; }
-  else { $("student").style.borderColor = "#b8886b"; }
+    let valid = true;
+    if (!student) { $("student").style.borderColor = "var(--red)"; valid = false; }
+    else { $("student").style.borderColor = "#b8886b"; }
 
-  if (!absentNo) { $("absentNo").style.borderColor = "var(--red)"; valid = false; }
-  else { $("absentNo").style.borderColor = "#b8886b"; }
+    if (!absentNo) { $("absentNo").style.borderColor = "var(--red)"; valid = false; }
+    else { $("absentNo").style.borderColor = "#b8886b"; }
 
-  if (!className) { $("className").style.borderColor = "var(--red)"; valid = false; }
-  else { $("className").style.borderColor = "#b8886b"; }
+    if (!className) { $("className").style.borderColor = "var(--red)"; valid = false; }
+    else { $("className").style.borderColor = "#b8886b"; }
 
-  if (!valid) {
-    loginMsg.textContent = "⚠️ Nyuwun sewu, Jeneng, No. Absen, lan Kelas kudu diisi kabeh!";
-    return;
+    if (!valid) {
+      loginMsg.textContent = "⚠️ Nyuwun sewu, Jeneng, No. Absen, lan Kelas kudu diisi kabeh!";
+      return;
+    }
+
+    loginMsg.textContent = "";
+    $("login").classList.add("hidden");
+    $("game").classList.remove("hidden");
+    
+    initGame();
+  } catch (err) {
+    alert("Koreksi sistem: " + err.message);
   }
-
-  loginMsg.textContent = "";
-  $("login").classList.add("hidden");
-  $("game").classList.remove("hidden");
-  
-  initGame();
 }
 
 function initGame() {
@@ -501,32 +492,35 @@ function openAnswerModal(word) {
   setTimeout(() => $("answerInput").focus(), 150);
 }
 
+function closeModal() {
+  $("answerModal").classList.add("hidden");
+  pendingWord = null;
+}
+
 function submitAnswer() {
   if (!pendingWord) return;
   const input = $("answerInput").value.trim().toLowerCase();
   
   if (pendingWord.ans.includes(input)) {
-    // Jawaban Benar
+    // Jawaban Bener
     foundWords.add(pendingWord.id);
     score += 5; // Poin +5
     $("score").textContent = score;
     $("foundCount").textContent = foundWords.size;
     
-    // Warnai cell di grid
+    // Mark di grid
     getLineCells(pendingWord.line[0], pendingWord.line[1]).forEach(([r, c]) => {
       document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`)?.classList.add("found");
     });
     
-    // Coret kata di daftar kanan
+    // Mark di list
     const item = $(`word-item-${pendingWord.id}`);
     if (item) {
       item.textContent = `${pendingWord.id}. ${input}`;
       item.classList.add("done");
     }
     
-    $("answerModal").classList.add("hidden");
-    pendingWord = null;
-    
+    closeModal();
     if (foundWords.size === TARGET_WORDS.length) finishGame(true);
   } else {
     // Jawaban Salah
@@ -581,6 +575,13 @@ function finishGame(isWin) {
   
   sendResult();
 }
+
+// BIsa tekan Enter pada input modal
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !$("answerModal").classList.contains("hidden")) {
+    submitAnswer();
+  }
+});
 </script>
 </body>
 </html>
