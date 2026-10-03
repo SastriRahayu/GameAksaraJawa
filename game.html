@@ -12,6 +12,7 @@
   --accent: #b96845;
   --green: #4f6f3a;
   --gold: #dda24d;
+  --red: #b93c3c;
 }
 * { box-sizing: border-box; }
 body {
@@ -31,7 +32,7 @@ body {
   box-shadow: 0 10px 25px rgba(107, 67, 37, 0.2);
 }
 h1 {
-  font-size: clamp(32px, 6vw, 56px);
+  font-size: clamp(30px, 5.5vw, 52px);
   margin: 4px 0;
   text-align: center;
   font-family: Georgia, serif;
@@ -40,7 +41,7 @@ h1 {
 .subtitle {
   text-align: center;
   font-weight: 900;
-  font-size: clamp(18px, 2.8vw, 26px);
+  font-size: clamp(16px, 2.5vw, 24px);
   background: #e5a070;
   border: 2px solid #78452e;
   border-radius: 14px;
@@ -48,7 +49,7 @@ h1 {
   margin: 8px auto 18px;
   max-width: 600px;
 }
-.form { max-width: 480px; margin: 30px auto; }
+.form { max-width: 480px; margin: 20px auto; }
 .field { margin: 14px 0; }
 .field label { display: block; font-weight: 800; margin-bottom: 6px; }
 .field input, .field select {
@@ -58,6 +59,12 @@ h1 {
   border-radius: 12px;
   font-size: 16px;
   background: #fffdf7;
+  transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: #70412c;
+  box-shadow: 0 0 0 3px rgba(112, 65, 44, 0.2);
 }
 button {
   border: 0;
@@ -70,13 +77,13 @@ button {
   box-shadow: 0 4px #4c2a1d;
   cursor: pointer;
   margin: 4px;
-  transition: transform 0.1s;
+  transition: transform 0.1s, filter 0.1s;
 }
 button:hover { filter: brightness(1.08); }
 button:active { transform: translateY(2px); box-shadow: 0 2px #4c2a1d; }
 button.green { background: var(--green); box-shadow: 0 4px #2e4421; }
 button.gold { background: var(--gold); box-shadow: 0 4px #8b5b20; }
-button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
+button.red { background: var(--red); box-shadow: 0 4px #732222; }
 
 .top {
   display: grid;
@@ -91,8 +98,8 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
   border: 2px solid #bd8d70;
   border-radius: 14px;
 }
-.stat small { display: block; font-weight: 800; font-size: 12px; }
-.stat b { font-size: 24px; color: var(--ink); }
+.stat small { display: block; font-weight: 800; font-size: 11px; }
+.stat b { font-size: 22px; color: var(--ink); }
 
 .layout { display: grid; grid-template-columns: minmax(0, 1.5fr) 300px; gap: 18px; }
 .board { background: #986247; padding: 10px; border-radius: 20px; box-shadow: 0 8px #70442e; }
@@ -114,7 +121,7 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
   border: 1px dashed #bd8e70;
   border-radius: 6px;
   font-family: "Noto Sans Javanese", "Javanese Text", serif;
-  font-size: clamp(18px, 3.5vw, 36px);
+  font-size: clamp(16px, 3.2vw, 34px);
   cursor: pointer;
   background: #fffdf7;
 }
@@ -126,7 +133,7 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
-  max-height: 400px;
+  max-height: 380px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -136,7 +143,7 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
   border-radius: 8px;
   background: #fff9ec;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
 }
 .word-item.done { text-decoration: line-through; background: #d7e8be; color: #355021; }
 
@@ -154,9 +161,9 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
-  place-items: center;
+  align-items: center;
   justify-content: center;
   z-index: 999;
   padding: 16px;
@@ -181,16 +188,16 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
   text-align: center;
   margin: 14px 0;
 }
-.modal-msg { color: #b93c3c; font-weight: bold; min-height: 20px; margin-bottom: 10px; }
+.modal-msg { color: var(--red); font-weight: bold; min-height: 20px; margin-bottom: 10px; }
 
 .result { text-align: center; }
 .score-badge { font-size: 64px; font-weight: 900; color: var(--green); margin: 10px 0; }
-.error { color: #a33120; font-weight: 800; }
+.error { color: var(--red); font-weight: 800; margin-top: 10px; }
 .ok { color: #3d6c32; font-weight: 800; }
 
 @media(max-width:780px){
   .layout { grid-template-columns: 1fr; }
-  .words-list { grid-template-columns: 1fr 1fr; max-height: 200px; }
+  .words-list { grid-template-columns: 1fr 1fr; max-height: 180px; }
 }
 </style>
 </head>
@@ -201,24 +208,43 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
   <section id="login" class="card form">
     <h1>Aksara Jawa</h1>
     <div class="subtitle">Temokne lan Tulisen Tembunge!</div>
+    
     <div class="field">
       <label for="student">Jeneng Lengkap / Kode Siswa</label>
-      <input id="student" placeholder="Tulisen jeneng siswa">
+      <input id="student" type="text" placeholder="Tulisen jeneng siswa">
     </div>
+    
     <div class="field">
       <label for="absentNo">No. Absen</label>
-      <input id="absentNo" type="number" min="1" max="50" placeholder="Tulisen nomer absen">
+      <input id="absentNo" type="number" min="1" max="60" placeholder="Tulisen nomer absen">
     </div>
+    
     <div class="field">
       <label for="className">Kelas</label>
       <select id="className">
         <option value="">-- Pilih Kelas --</option>
-        <option>VII-A</option><option>VII-B</option>
-        <option>VIII-A</option><option>VIII-B</option>
-        <option>IX-A</option><option>IX-B</option>
+        <optgroup label="Kelas VII">
+          <option value="VII A">VII A</option><option value="VII B">VII B</option>
+          <option value="VII C">VII C</option><option value="VII D">VII D</option>
+          <option value="VII E">VII E</option><option value="VII F">VII F</option>
+          <option value="VII G">VII G</option><option value="VII H">VII H</option>
+        </optgroup>
+        <optgroup label="Kelas VIII">
+          <option value="VIII A">VIII A</option><option value="VIII B">VIII B</option>
+          <option value="VIII C">VIII C</option><option value="VIII D">VIII D</option>
+          <option value="VIII E">VIII E</option><option value="VIII F">VIII F</option>
+          <option value="VIII G">VIII G</option><option value="VIII H">VIII H</option>
+        </optgroup>
+        <optgroup label="Kelas IX">
+          <option value="IX A">IX A</option><option value="IX B">IX B</option>
+          <option value="IX C">IX C</option><option value="IX D">IX D</option>
+          <option value="IX E">IX E</option><option value="IX F">IX F</option>
+          <option value="IX G">IX G</option><option value="IX H">IX H</option>
+        </optgroup>
       </select>
     </div>
-    <button id="startBtn" class="green" style="width:100%; margin-top:10px;">🎮 MULAI GAME</button>
+    
+    <button id="startBtn" type="button" class="green" style="width:100%; margin-top:10px;">🎮 MULAI GAME</button>
     <p id="loginMsg" class="error"></p>
   </section>
 
@@ -250,12 +276,12 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
   <div id="answerModal" class="modal-overlay hidden">
     <div class="modal">
       <h2>Tulis wacane tembung kuwi!</h2>
-      <p id="modalHint" style="font-size:14px; color:#666;">Ketik wacan Latin tembung sing diarsir:</p>
+      <p style="font-size:14px; color:#666;">Ketik wacan Latin tembung sing diarsir:</p>
       <input type="text" id="answerInput" placeholder="Ketik jawaban ing kene..." autocomplete="off">
       <div id="modalMsg" class="modal-msg"></div>
       <div>
-        <button id="submitAnswerBtn" class="green">Kirim Jawaban</button>
-        <button id="cancelModalBtn" class="red">Batal</button>
+        <button id="submitAnswerBtn" type="button" class="green">Kirim Jawaban</button>
+        <button id="cancelModalBtn" type="button" class="red">Batal</button>
       </div>
     </div>
   </div>
@@ -267,15 +293,15 @@ button.red { background: #b93c3c; box-shadow: 0 4px #732222; }
     <div id="finalScore" class="score-badge">0</div>
     <p>Poin Pungkasan</p>
     <p id="sendStatus"></p>
-    <button id="sendAgain" class="green">📤 Kirim Hasil Maneh</button>
+    <button id="sendAgain" type="button" class="green">📤 Kirim Hasil Maneh</button>
   </section>
 </div>
 
 <script>
-// URL Google Apps Script milik Anda
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxGZdH1Axu081xAmpEPonwofMUyW2ll_yCmJ5694keKDgWaQPabBbGIjMBxGe34oB8o/exec";
+// Isikan URL Web App Google Apps Script dari Drive Anda di sini
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxkdifQXOQPux5UPOOH9sEiakkIwbeN08I5wFL48j8MmahxdSL25P6CWUrGhgpI4sFm/exec";
 
-// Matriks Papan Aksara Jawa 10x10 persis sesuai gambar
+// Grid Aksara Jawa 10x10
 const GRID_DATA = [
   ["ꦏꦸ", "ꦛ", "ꦱ", "ꦮ", "ꦢ", "ꦝ", "ꦲ", "ꦂ", "ꦠ", "ꦚ"],
   ["ꦛ", "ꦭ", "ꦫ", "ꦱꦺ", "ꦮꦸ", "ꦝ", "ꦲ", "ꦠꦶ", "ꦤ꧀", "ꦢ"],
@@ -289,7 +315,7 @@ const GRID_DATA = [
   ["ꦝ", "ꦕꦼ", "ꦩꦺꦁ", "ꦲꦶꦁ", "ꦒꦶꦃ", "ꦠꦶ", "ꦭꦼ", "ꦩ꧀", "ꦏꦺꦴ", "ꦭ"]
 ];
 
-// Daftar 23 Tembung & Kunci Jawaban
+// Daftar 23 Tembung & Koordinat Kunci Jawaban
 const TARGET_WORDS = [
   { id: 1,  ans: ["kula"],         line: [[0,0], [1,1]] },
   { id: 2,  ans: ["kutha","kuta"], line: [[0,0], [1,0]] },
@@ -316,12 +342,54 @@ const TARGET_WORDS = [
   { id: 23, ans: ["tindak"],       line: [[1,7], [6,7]] }
 ];
 
-const TOTAL_TIME = 3600; // 60 menit = 3600 detik
+const TOTAL_TIME = 3600; // 60 menit
 let score = 0, timeLeft = TOTAL_TIME, timer = null;
 let foundWords = new Set();
 let dragging = false, startCell = null, pendingWord = null;
 
 const $ = id => document.getElementById(id); const $$ = s => document.querySelectorAll(s);
+
+// Inisialisasi Saat Halaman Siap
+document.addEventListener("DOMContentLoaded", () => {
+  $("startBtn").onclick = startGame;
+  $("submitAnswerBtn").onclick = submitAnswer;
+  $("cancelModalBtn").onclick = () => { $("answerModal").classList.add("hidden"); pendingWord = null; };
+  $("sendAgain").onclick = sendResult;
+  $("answerInput").onkeydown = e => { if (e.key === "Enter") submitAnswer(); };
+  
+  // Memungkinkan tekan Enter di input awal untuk Mulai Game
+  ["student", "absentNo", "className"].forEach(id => {
+    $(id).addEventListener("keydown", e => { if (e.key === "Enter") startGame(); });
+  });
+});
+
+function startGame() {
+  const student = $("student").value.trim();
+  const absentNo = $("absentNo").value.trim();
+  const className = $("className").value;
+  const loginMsg = $("loginMsg");
+
+  let valid = true;
+  if (!student) { $("student").style.borderColor = "var(--red)"; valid = false; }
+  else { $("student").style.borderColor = "#b8886b"; }
+
+  if (!absentNo) { $("absentNo").style.borderColor = "var(--red)"; valid = false; }
+  else { $("absentNo").style.borderColor = "#b8886b"; }
+
+  if (!className) { $("className").style.borderColor = "var(--red)"; valid = false; }
+  else { $("className").style.borderColor = "#b8886b"; }
+
+  if (!valid) {
+    loginMsg.textContent = "⚠️ Nyuwun sewu, Jeneng, No. Absen, lan Kelas kudu diisi kabeh!";
+    return;
+  }
+
+  loginMsg.textContent = "";
+  $("login").classList.add("hidden");
+  $("game").classList.remove("hidden");
+  
+  initGame();
+}
 
 function initGame() {
   score = 0;
@@ -355,8 +423,8 @@ function renderGrid() {
       g.appendChild(cell);
     }
   }
-  document.addEventListener("pointermove", handlePointerMove, { passive: false });
-  document.addEventListener("pointerup", handlePointerUp, { passive: false });
+  document.onpointermove = handlePointerMove;
+  document.onpointerup = handlePointerUp;
 }
 
 function renderWordsList() {
@@ -430,7 +498,7 @@ function openAnswerModal(word) {
   $("answerInput").value = "";
   $("modalMsg").textContent = "";
   $("answerModal").classList.remove("hidden");
-  setTimeout(() => $("answerInput").focus(), 100);
+  setTimeout(() => $("answerInput").focus(), 150);
 }
 
 function submitAnswer() {
@@ -438,18 +506,18 @@ function submitAnswer() {
   const input = $("answerInput").value.trim().toLowerCase();
   
   if (pendingWord.ans.includes(input)) {
-    // Jawaban Bener
+    // Jawaban Benar
     foundWords.add(pendingWord.id);
     score += 5; // Poin +5
     $("score").textContent = score;
     $("foundCount").textContent = foundWords.size;
     
-    // Mark di grid
+    // Warnai cell di grid
     getLineCells(pendingWord.line[0], pendingWord.line[1]).forEach(([r, c]) => {
       document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`)?.classList.add("found");
     });
     
-    // Mark di list
+    // Coret kata di daftar kanan
     const item = $(`word-item-${pendingWord.id}`);
     if (item) {
       item.textContent = `${pendingWord.id}. ${input}`;
@@ -472,7 +540,7 @@ function payloadData() {
   const sec = usedSec % 60;
   return {
     nama: $("student").value.trim(),
-    no_absen: $("absentNo").value,
+    no_absen: $("absentNo").value.trim(),
     kelas: $("className").value,
     skor: score,
     ditemukan: foundWords.size,
@@ -513,25 +581,6 @@ function finishGame(isWin) {
   
   sendResult();
 }
-
-// Event Listeners
-$("startBtn").onclick = () => {
-  const n = $("student").value.trim();
-  const a = $("absentNo").value;
-  const k = $("className").value;
-  if (!n || !a || !k) {
-    $("loginMsg").textContent = "Jeneng, No. Absen, lan Kelas kudu diisi kabeh!";
-    return;
-  }
-  $("login").classList.add("hidden");
-  $("game").classList.remove("hidden");
-  initGame();
-};
-
-$("submitAnswerBtn").onclick = submitAnswer;
-$("answerInput").onkeydown = e => { if (e.key === "Enter") submitAnswer(); };
-$("cancelModalBtn").onclick = () => { $("answerModal").classList.add("hidden"); pendingWord = null; };
-$("sendAgain").onclick = sendResult;
 </script>
 </body>
 </html>
